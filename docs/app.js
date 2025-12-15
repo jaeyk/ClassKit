@@ -215,20 +215,37 @@ document.getElementById("coldCallUpload").addEventListener("change", handleRoste
 document.getElementById("groupUpload").addEventListener("change", handleGroupUpload);
 
 function setupTabs() {
-  const tabButtons = document.querySelectorAll("[role='tab']");
+  const tabButtons = Array.from(document.querySelectorAll("[role='tab']"));
+  const panels = new Map(
+    tabButtons.map((button) => [button, document.getElementById(button.getAttribute("aria-controls"))])
+  );
+
+  function activateTab(target) {
+    tabButtons.forEach((button) => {
+      const isActive = button === target;
+      button.classList.toggle("tab--active", isActive);
+      button.setAttribute("aria-selected", String(isActive));
+      const panel = panels.get(button);
+      if (panel) {
+        panel.classList.toggle("tab-panel--hidden", !isActive);
+      }
+    });
+  }
 
   tabButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      tabButtons.forEach((other) => {
-        const isActive = other === button;
-        other.classList.toggle("tab--active", isActive);
-        other.setAttribute("aria-selected", String(isActive));
-        document
-          .getElementById(other.getAttribute("aria-controls"))
-          .classList.toggle("tab-panel--hidden", !isActive);
-      });
+    button.addEventListener("click", () => activateTab(button));
+    button.addEventListener("keydown", (event) => {
+      if (event.key === " " || event.key === "Enter") {
+        event.preventDefault();
+        activateTab(button);
+      }
     });
   });
+
+  const initiallyActive = tabButtons.find((button) => button.classList.contains("tab--active")) ?? tabButtons[0];
+  if (initiallyActive) {
+    activateTab(initiallyActive);
+  }
 }
 
 setupTabs();
