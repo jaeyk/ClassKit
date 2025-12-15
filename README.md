@@ -34,8 +34,8 @@ make_breakout_groups(names, team_count=2, random_state=7)
 A lightweight web UI lives in `docs/` so it can be published with GitHub
 Pages. Open `docs/index.html` locally or configure Pages to serve from the
 `docs` directory to try the cold calling and breakout tools without installing
-Python. Upload CSV/text rosters—cold calling expects two columns (`name`,
-`excused`), while breakout grouping accepts a single column of names. Each
+Python. Upload CSV/text rosters with two columns (`name`, `excused`). The first
+row is treated as a header and ignored when building cold calls or groups. Each
 click creates a new shuffle unless you supply a seed.
 
 ### Sample data for quick testing
@@ -44,7 +44,8 @@ The browser UI ships with sample downloads so you can try the tools
 immediately:
 
 - `docs/sample_cold_call_roster.csv` contains `name,excused` columns.
-- `docs/sample_breakout_names.csv` lists the same names in a single column.
+- `docs/sample_breakout_names.csv` provides the same roster in the identical
+  two-column format for group creation.
 
 ### Publishing to GitHub Pages
 

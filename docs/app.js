@@ -25,10 +25,14 @@ function seededShuffle(list, seed) {
 }
 
 function parseRoster(text) {
-  return text
+  const rows = text
     .split(/\n+/)
     .map((line) => line.trim())
-    .filter(Boolean)
+    .filter(Boolean);
+
+  const [, ...dataRows] = rows; // ignore the first row (header)
+
+  return dataRows
     .map((line) => {
       const [name, excusedRaw] = line.split(",").map((piece) => piece?.trim() ?? "");
       return { name, excused: /^true$/i.test(excusedRaw) };
@@ -131,10 +135,8 @@ function handleMakeGroups() {
   const seed = normalizeSeed(document.getElementById("groupSeed").value);
   const output = document.getElementById("groupResult");
 
-  const names = namesText
-    .split(/\n+/)
-    .map((name) => name.trim())
-    .filter(Boolean);
+  const roster = parseRoster(namesText);
+  const names = roster.filter((row) => !row.excused).map((row) => row.name);
 
   if (!names.length) {
     output.textContent = "Upload a roster file to create groups.";
