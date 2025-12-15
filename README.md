@@ -1,8 +1,8 @@
 # ClassKit (teaching_tools)
 
-Developed by Jae Yeon Kim using OpenAI's Codex.
+ClassKit is a lightweight suite of browser-based classroom utilities. Upload a roster, choose your options, and generate reproducible student samples, breakout groups, and peer-review matches. No installation required.
 
-ClassKit is a lightweight collection of classroom utilities:
+This suite currently includes:
 
 - **Cold calling helper**: randomizes student selection while respecting opt-out
   preferences.
@@ -48,7 +48,7 @@ without installing Python. The landing tab explains the tools; switch to
 Upload CSV/text rosters with a header row that is ignored when processing. Each
 click creates a new shuffle unless you supply a seed. Cold calls expect
 `name,excused` columns; breakout groups and peer matches accept single-column
-name lists.
+name lists with an optional header labeled `name` or `names`.
 
 Development note: The browser experience and underlying utilities were
 developed by Jae Yeon Kim using OpenAI's Codex. The collection is called

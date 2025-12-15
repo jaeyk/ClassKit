@@ -46,9 +46,12 @@ function parseBreakoutRoster(text) {
     .map((line) => line.trim())
     .filter(Boolean);
 
-  const [, ...dataRows] = rows; // ignore the first row (header)
+  if (!rows.length) return [];
 
-  return dataRows.filter(Boolean);
+  const [first, ...rest] = rows;
+  const hasHeader = /^"?names?"?$/i.test(first) || /^"?name"?$/i.test(first);
+
+  return (hasHeader ? rest : rows).filter(Boolean);
 }
 
 function parsePeerRoster(text) {
@@ -202,27 +205,32 @@ function handlePeerMatches() {
   const seed = normalizeSeed(document.getElementById("peerSeed").value);
   const output = document.getElementById("peerResult");
 
-  const names = parsePeerRoster(namesText);
-  if (names.length < 2) {
-    output.textContent = "Upload at least two participants to create matches.";
+  try {
+    const names = parsePeerRoster(namesText);
+    if (names.length < 2) {
+      output.textContent = "Upload at least two participants to create matches.";
+      updateDownloadLink("peerDownload", "", "");
+      return;
+    }
+
+    const shuffled = seededShuffle(names, seed);
+    const matches = shuffled.map((reviewer, index) => ({
+      reviewer,
+      reviewee: shuffled[(index + 1) % shuffled.length],
+    }));
+
+    const list = matches
+      .map((pair) => `<li><strong>${pair.reviewer}</strong> reviews ${pair.reviewee}</li>`)
+      .join("");
+    output.innerHTML = `<ul class="group-list">${list}</ul>`;
+
+    const csvRows = matches.map((pair) => [pair.reviewer, pair.reviewee].join(","));
+    const withHeader = ["reviewer,reviewee", ...csvRows].join("\n");
+    updateDownloadLink("peerDownload", withHeader, "peer_review_matches.csv");
+  } catch (error) {
+    output.textContent = error.message;
     updateDownloadLink("peerDownload", "", "");
-    return;
   }
-
-  const shuffled = seededShuffle(names, seed);
-  const matches = shuffled.map((reviewer, index) => ({
-    reviewer,
-    reviewee: shuffled[(index + 1) % shuffled.length],
-  }));
-
-  const list = matches
-    .map((pair) => `<li><strong>${pair.reviewer}</strong> reviews ${pair.reviewee}</li>`)
-    .join("");
-  output.innerHTML = `<ul class="group-list">${list}</ul>`;
-
-  const csvRows = matches.map((pair) => [pair.reviewer, pair.reviewee].join(","));
-  const withHeader = ["reviewer,reviewee", ...csvRows].join("\n");
-  updateDownloadLink("peerDownload", withHeader, "peer_review_matches.csv");
 }
 
 async function handleRosterUpload(event) {
