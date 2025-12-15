@@ -7,8 +7,15 @@ function mulberry32(seed) {
   };
 }
 
+function normalizeSeed(raw) {
+  const trimmed = (raw ?? "").toString().trim();
+  if (trimmed === "") return null;
+  const asNumber = Number(trimmed);
+  return Number.isNaN(asNumber) ? null : asNumber;
+}
+
 function seededShuffle(list, seed) {
-  const rng = seed == null || Number.isNaN(Number(seed)) ? Math.random : mulberry32(Number(seed));
+  const rng = seed == null ? Math.random : mulberry32(seed);
   const copy = [...list];
   for (let i = copy.length - 1; i > 0; i -= 1) {
     const j = Math.floor(rng() * (i + 1));
@@ -59,66 +66,18 @@ function updateDownloadLink(anchorId, content, filename) {
   anchor.classList.remove("download--hidden");
 }
 
-const defaultColdCallRoster = [
-  "Avery, false",
-  "Bianca, false",
-  "Caleb, true",
-  "Darius, false",
-  "Elena, false",
-  "Fatima, true",
-  "Gavin, false",
-  "Harper, false",
-  "Imani, false",
-  "Jasper, true",
-  "Kira, false",
-  "Luca, false",
-  "Maya, false",
-  "Nico, true",
-  "Omar, false",
-  "Priya, false",
-  "Quinn, false",
-  "Rosa, false",
-  "Soren, false",
-  "Talia, true",
-  "Uriel, false",
-  "Valerie, false",
-  "Wes, false",
-  "Yara, false",
-].join("\n");
-
-const defaultGroupNames = [
-  "Avery",
-  "Bianca",
-  "Caleb",
-  "Darius",
-  "Elena",
-  "Fatima",
-  "Gavin",
-  "Harper",
-  "Imani",
-  "Jasper",
-  "Kira",
-  "Luca",
-  "Maya",
-  "Nico",
-  "Omar",
-  "Priya",
-  "Quinn",
-  "Rosa",
-  "Soren",
-  "Talia",
-  "Uriel",
-  "Valerie",
-  "Wes",
-  "Yara",
-].join("\n");
-
 function handleColdCall() {
   const rosterText = document.getElementById("coldCallRoster").value;
   const sampleSize = Number(document.getElementById("sampleSize").value || "1");
-  const seed = document.getElementById("coldCallSeed").value;
+  const seed = normalizeSeed(document.getElementById("coldCallSeed").value);
   const includeExcused = document.getElementById("includeExcused").checked;
   const output = document.getElementById("coldCallResult");
+
+  if (!rosterText.trim()) {
+    output.textContent = "Upload a roster file to run cold calling.";
+    updateDownloadLink("coldCallDownload", "", "");
+    return;
+  }
 
   if (!Number.isFinite(sampleSize) || sampleSize < 1) {
     output.textContent = "Sample size must be at least 1.";
@@ -169,7 +128,7 @@ function handleMakeGroups() {
   const namesText = document.getElementById("groupNames").value;
   const teamCount = document.getElementById("teamCount").value;
   const groupSize = document.getElementById("groupSize").value;
-  const seed = document.getElementById("groupSeed").value;
+  const seed = normalizeSeed(document.getElementById("groupSeed").value);
   const output = document.getElementById("groupResult");
 
   const names = namesText
@@ -178,7 +137,7 @@ function handleMakeGroups() {
     .filter(Boolean);
 
   if (!names.length) {
-    output.textContent = "Add at least one name to create groups.";
+    output.textContent = "Upload a roster file to create groups.";
     return;
   }
 
@@ -204,15 +163,17 @@ function handleMakeGroups() {
       cursor += size;
     }
 
-    const list = groups
-      .map((group, index) => `<li><strong>Group ${index + 1}:</strong> ${group.join(", ")}</li>`)
+    const rows = groups.flatMap((group, index) =>
+      group.map((name) => ({ name, group: index + 1 }))
+    );
+
+    const list = rows
+      .map((row) => `<li><strong>${row.name}</strong>: Group ${row.group}</li>`)
       .join("");
     output.innerHTML = `<ul class="group-list">${list}</ul>`;
 
-    const csv = groups
-      .map((group, index) => [group.map((name) => `"${name}"`).join(","), `Group ${index + 1}`].join(","))
-      .join("\n");
-    const withHeader = ["name,group", csv].filter(Boolean).join("\n");
+    const csvRows = rows.map((row) => [row.name, row.group].join(","));
+    const withHeader = ["name,group", ...csvRows].join("\n");
     updateDownloadLink("groupDownload", withHeader, "breakout_groups.csv");
   } catch (error) {
     output.textContent = error.message;
@@ -226,6 +187,8 @@ async function handleRosterUpload(event) {
   try {
     const text = await readFileText(file);
     document.getElementById("coldCallRoster").value = text.trim();
+    document.getElementById("coldCallResult").textContent = "";
+    updateDownloadLink("coldCallDownload", "", "");
   } catch (error) {
     document.getElementById("coldCallResult").textContent = error.message;
   }
@@ -237,13 +200,13 @@ async function handleGroupUpload(event) {
   try {
     const text = await readFileText(file);
     document.getElementById("groupNames").value = text.trim();
+    document.getElementById("groupResult").textContent = "";
+    updateDownloadLink("groupDownload", "", "");
   } catch (error) {
     document.getElementById("groupResult").textContent = error.message;
   }
 }
 
-document.getElementById("coldCallRoster").value = defaultColdCallRoster;
-document.getElementById("groupNames").value = defaultGroupNames;
 document.getElementById("runColdCall").addEventListener("click", handleColdCall);
 document.getElementById("makeGroups").addEventListener("click", handleMakeGroups);
 document.getElementById("coldCallUpload").addEventListener("change", handleRosterUpload);

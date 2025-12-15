@@ -13,9 +13,9 @@
           <p class="eyebrow">Classroom helpers</p>
           <h1>Cold calls and breakout groups, right in your browser.</h1>
           <p class="lede">
-            Paste your roster, pick a few options, and get a reproducible set of
-            student names or groups. Everything runs locally in the browser—no
-            servers required.
+            Upload your roster, pick a few options, and get a reproducible set
+            of student names or groups. Everything runs locally in the
+            browser—no servers required.
           </p>
         </div>
       </header>
@@ -29,33 +29,8 @@
           </div>
           <div class="card__body">
             <label class="field">
-              <span>Roster (name, excused)</span>
-              <textarea id="coldCallRoster" rows="12">
-Avery, false
-Bianca, false
-Caleb, true
-Darius, false
-Elena, false
-Fatima, true
-Gavin, false
-Harper, false
-Imani, false
-Jasper, true
-Kira, false
-Luca, false
-Maya, false
-Nico, true
-Omar, false
-Priya, false
-Quinn, false
-Rosa, false
-Soren, false
-Talia, true
-Uriel, false
-Valerie, false
-Wes, false
-Yara, false
-              </textarea>
+              <span>Uploaded roster preview (name, excused)</span>
+              <textarea id="coldCallRoster" rows="8" placeholder="Upload a CSV or TXT roster to preview it" readonly></textarea>
             </label>
             <label class="field">
               <span>Upload roster (.csv or .txt)</span>
@@ -93,33 +68,8 @@ Yara, false
           </div>
           <div class="card__body">
             <label class="field">
-              <span>Names (one per line)</span>
-              <textarea id="groupNames" rows="12">
-Avery
-Bianca
-Caleb
-Darius
-Elena
-Fatima
-Gavin
-Harper
-Imani
-Jasper
-Kira
-Luca
-Maya
-Nico
-Omar
-Priya
-Quinn
-Rosa
-Soren
-Talia
-Uriel
-Valerie
-Wes
-Yara
-              </textarea>
+              <span>Uploaded names preview (one per line)</span>
+              <textarea id="groupNames" rows="8" placeholder="Upload a CSV or TXT roster to preview it" readonly></textarea>
             </label>
             <label class="field">
               <span>Upload roster (.csv or .txt)</span>
