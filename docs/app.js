@@ -36,47 +36,6 @@ function renderList(list) {
   return list.join("\n");
 }
 
-const defaultColdCallRoster = [
-  "Alex, false",
-  "Bao, true",
-  "Carmen, false",
-  "DeShawn, false",
-  "Ella, true",
-  "Fiona, false",
-  "Gus, false",
-  "Harper, true",
-  "Inez, false",
-  "Jamal, false",
-].join("\n");
-
-const defaultGroupNames = [
-  "Alex",
-  "Bao",
-  "Carmen",
-  "DeShawn",
-  "Ella",
-  "Fiona",
-  "Gus",
-  "Harper",
-  "Inez",
-  "Jamal",
-  "Kayla",
-  "Luis",
-  "Mara",
-  "Noor",
-  "Oscar",
-  "Priya",
-  "Quinn",
-  "Ravi",
-  "Sofia",
-  "Tariq",
-  "Uma",
-  "Vera",
-  "Wendy",
-  "Yara",
-  "Zeke",
-].join("\n");
-
 function handleColdCall() {
   const rosterText = document.getElementById("coldCallRoster").value;
   const sampleSize = Number(document.getElementById("sampleSize").value || "1");
@@ -171,7 +130,5 @@ function handleMakeGroups() {
   }
 }
 
-document.getElementById("coldCallRoster").value = defaultColdCallRoster;
-document.getElementById("groupNames").value = defaultGroupNames;
 document.getElementById("runColdCall").addEventListener("click", handleColdCall);
 document.getElementById("makeGroups").addEventListener("click", handleMakeGroups);
