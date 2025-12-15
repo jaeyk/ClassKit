@@ -51,7 +51,7 @@ click creates a new shuffle unless you supply a seed. Cold calls expect
 name lists with an optional header labeled `name` or `names`.
 
 Development note: The browser experience and underlying utilities were
-developed by Jae Yeon Kim using OpenAI's Codex. The collection is called
+developed by Jae Yeon Kim using OpenAI's Codex (2025). The collection is called
 ClassKit and the published site will reference that name.
 
 ### Sample data for quick testing
