@@ -1,6 +1,6 @@
-# teaching_tools
+# ClassKit (teaching_tools)
 
-A lightweight collection of classroom utilities:
+ClassKit is a lightweight collection of classroom utilities:
 
 - **Cold calling helper**: randomizes student selection while respecting opt-out
   preferences.
@@ -39,6 +39,10 @@ Python. The landing tab explains the tools; switch to **Cold calls** or
 (`name`, `excused`). The first row is treated as a header and ignored when
 building cold calls or groups. Each click creates a new shuffle unless you
 supply a seed.
+
+Development note: The browser experience and underlying utilities were
+developed by Jae Yeon Kim using OpenAI's Codex. The collection is called
+ClassKit and the published site will reference that name.
 
 ### Sample data for quick testing
 
