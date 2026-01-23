@@ -81,6 +81,8 @@ immediately:
 - `docs/sample_cold_call_roster.csv` contains `name,excused` columns.
 - `docs/sample_breakout_names.csv` lists the same students in a single `name`
   column for group creation.
+- `docs/sample_project_preferences.csv` pairs student names with preference
+  strings for topic-based grouping.
 - `docs/sample_peer_review_names.csv` reuses the roster as a single `name`
   column for peer matching.
 
