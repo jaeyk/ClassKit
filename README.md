@@ -57,6 +57,26 @@ form_preference_groups(roster, group_size=2, random_state=11)
 # [['Student A', 'Student B'], ['Student C']]
 ```
 
+### Preference-based grouping logic
+
+The preference grouping utility uses a greedy similarity-based approach:
+
+1. Each student's preferences are parsed into a set of normalized topics using
+   the provided separators (comma by default).
+2. A Jaccard similarity score is computed between students based on overlapping
+   topics.
+3. Groups are formed by selecting a starting student and repeatedly adding the
+   remaining student with the highest average similarity to the current group
+   until the target group size is reached.
+
+This yields teams that are locally cohesive by shared interests while keeping
+group sizes balanced. For deterministic results, supply a random seed.
+
+**Jaccard similarity example:** If Student A lists topics
+{Health, Education, Environment} and Student B lists {Health, Environment},
+their Jaccard similarity is |{Health, Environment}| / |{Health, Education, Environment}|
+= 2 / 3 ≈ 0.67, indicating strong overlap.
+
 ## Run in your browser
 
 A lightweight web UI lives in `docs/` so it can be published with GitHub
